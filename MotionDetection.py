@@ -1,4 +1,4 @@
-import cv2, sys, numpy, os
+import cv2, sys, numpy, os, DirectionSend
 
 def start_obj_detect():
 
@@ -38,6 +38,7 @@ def start_obj_detect():
         center_y = int(y+(h/2))
         cv2.rectangle(frame1, (center_x, center_y), (center_x + 3, center_y + 3), (255,0,0), 2)
         cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        send_directions(center_x, center_y)
         
 
         if ret == True:
@@ -50,3 +51,12 @@ def start_obj_detect():
     cap.release()
     cv2.destroyAllWindows()
 
+def send_directions(center_x, center_y):
+    if center_x >= 0 and center_x < 85:
+        DirectionSend.left()
+    elif center_x >= 85 and center_x < 170:
+        DirectionSend.forward()
+    elif center_x >= 170 and center_x <= 255:
+        DirectionSend.right()
+    else:
+        ArithmeticError
