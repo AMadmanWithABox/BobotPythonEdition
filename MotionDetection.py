@@ -27,10 +27,18 @@ def start_obj_detect():
             (bigx, bigy, bigw, bigh) = cv2.boundingRect(largestContour)
             if(tempw + temph) > (bigw + bigh):
                 largestContour = contour
-        
+            if(largestContour.any() != None):
+                if(cv2.contourArea(largestContour) > 1000):
+                    continue
+                else:
+                    largestContour = None;
         
         (x, y, w, h) = cv2.boundingRect(largestContour)
+        center_x = int(x+(w/2))
+        center_y = int(y+(h/2))
+        cv2.rectangle(frame1, (center_x, center_y), (center_x + 3, center_y + 3), (255,0,0), 2)
         cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        
 
         if ret == True:
             cv2.imshow('Frame', frame1)
@@ -41,3 +49,4 @@ def start_obj_detect():
 
     cap.release()
     cv2.destroyAllWindows()
+
