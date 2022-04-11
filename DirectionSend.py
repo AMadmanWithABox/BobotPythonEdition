@@ -5,4 +5,4 @@ def left():
 
 def right():
 
-def backwards():
+def reverse():
