@@ -39,8 +39,8 @@ def start_obj_detect():
         center_y = int(y+(h/2))
         cv2.rectangle(frame1, (center_x, center_y), (center_x + 3, center_y + 3), (255,0,0), 2)
         cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        if(largestContour != None):
-            send_directions(center_x, center_y, 640, 480)
+        
+        send_directions(center_x, center_y, 640, 480)
         
 
         if ret == True:
