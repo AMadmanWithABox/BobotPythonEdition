@@ -1,12 +1,38 @@
 import cv2, sys, numpy, os, DirectionSend
 
+
+
+class DirectionAverager:
+    directions = []
+
+    def get_average_dir(self):
+        dir_avg_arr = [self.directions.count(0),self.directions.count(1),self.directions.count(2)]
+        dir_avg_ind = 1
+        for i in range(3):
+            if dir_avg_arr[i] > dir_avg_arr[dir_avg_ind]:
+                dir_avg_ind = i
+        self.directions.clear()
+        dir_avg_arr.clear()
+        if dir_avg_ind == 0:
+            DirectionSend.left()
+        elif dir_avg_ind == 1:
+            DirectionSend.forward()
+        elif dir_avg_ind == 2:
+            DirectionSend.right()
+
+
+dir_avg = DirectionAverager()
+
 def start_obj_detect():
+    global count
+    count = 1
+    
 
     cap = cv2.VideoCapture("http://192.168.8.211:8080/?action=stream");
 
     if (cap.isOpened() == False):
         print("Error opening video file")
-
+    
 
     while(cap.isOpened()):
         ret, frame1 = cap.read()
@@ -40,7 +66,8 @@ def start_obj_detect():
         cv2.rectangle(frame1, (center_x, center_y), (center_x + 3, center_y + 3), (255,0,0), 2)
         cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2)
         
-        send_directions(center_x, center_y, 640, 480)
+        count = send_directions(center_x, center_y, 640, 480, count)
+
         
 
         if ret == True:
@@ -53,14 +80,22 @@ def start_obj_detect():
     cap.release()
     cv2.destroyAllWindows()
 
-def send_directions(center_x, center_y, frame_w, frame_h):
+def send_directions(center_x, center_y, frame_w, frame_h, count):
+    count += 1
     first_third = frame_w * (1/3)
     second_third = frame_w *(2/3)
     if center_x >= 0 and center_x < first_third:
-        DirectionSend.left()
+        dir_avg.directions.append(0)
     elif center_x >= first_third and center_x < second_third:
-        DirectionSend.forward()
+        dir_avg.directions.append(1)
     elif center_x >= second_third and center_x <= frame_w:
-        DirectionSend.right()
+        dir_avg.directions.append(2)
     else:
         raise ArithmeticError("center_x can't be greater than")
+    if count >= 51:
+        dir_avg.get_average_dir()
+        count = 1
+        return count
+    else:
+        return count
+
