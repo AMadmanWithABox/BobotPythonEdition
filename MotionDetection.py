@@ -2,7 +2,7 @@ import cv2, sys, numpy, os, DirectionSend
 
 def start_obj_detect():
 
-    cap = cv2.VideoCapture(0);
+    cap = cv2.VideoCapture("http://192.168.8.211:8080/?action=stream");
 
     if (cap.isOpened() == False):
         print("Error opening video file")
@@ -13,6 +13,7 @@ def start_obj_detect():
         ret, frame2 = cap.read()
         frame1 = cv2.flip(frame1, flipCode=-1)
         frame2 = cv2.flip(frame2, flipCode=-1)
+
 
         dif = cv2.absdiff(frame1, frame2)
         dif_gray = cv2.cvtColor(dif, cv2.COLOR_BGR2GRAY)
@@ -38,7 +39,8 @@ def start_obj_detect():
         center_y = int(y+(h/2))
         cv2.rectangle(frame1, (center_x, center_y), (center_x + 3, center_y + 3), (255,0,0), 2)
         cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        send_directions(center_x, center_y)
+        
+        send_directions(center_x, center_y, 640, 480)
         
 
         if ret == True:
@@ -51,12 +53,14 @@ def start_obj_detect():
     cap.release()
     cv2.destroyAllWindows()
 
-def send_directions(center_x, center_y):
-    if center_x >= 0 and center_x < 85:
+def send_directions(center_x, center_y, frame_w, frame_h):
+    first_third = frame_w * (1/3)
+    second_third = frame_w *(2/3)
+    if center_x >= 0 and center_x < first_third:
         DirectionSend.left()
-    elif center_x >= 85 and center_x < 170:
+    elif center_x >= first_third and center_x < second_third:
         DirectionSend.forward()
-    elif center_x >= 170 and center_x <= 255:
+    elif center_x >= second_third and center_x <= frame_w:
         DirectionSend.right()
     else:
-        ArithmeticError
+        raise ArithmeticError("center_x can't be greater than")
