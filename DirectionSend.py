@@ -11,7 +11,7 @@ def connect():
     client = paramiko.client.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(host, port, username, password)
-    #_stdin, _stdout,_stderr = client.exec_command("python3 Directions/Forward.py")
+    client.exec_command("python3 Directions/Forward.py")
     #print(stdout.read().decode())
     client.close()
 
