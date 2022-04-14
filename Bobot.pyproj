@@ -25,6 +25,9 @@
     <Compile Include="DirectionSend.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ControllerWindow.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Window.py">
       <SubType>Code</SubType>
     </Compile>
