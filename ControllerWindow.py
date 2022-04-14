@@ -12,10 +12,15 @@ def controller():
     btn3 = Button(control_win, text = 'Right', bd = '5', command = DirectionSend.right)
     btn4 = Button(control_win, text = 'Reverse', bd = '5', command = DirectionSend.reverse)
 
-    btn1.pack(side = 'top')
-    btn2.pack(side = 'left')
-    btn3.pack(side = 'right')
-    btn4.pack(side = 'bottom')
+    btn1.place(x=50, y=25)
+    btn2.place(x=25, y=75)
+    btn3.place(x=100, y=75)
+    btn4.place(x=50, y=125)
+
+    control_win.bind('w', lambda event: DirectionSend.forward())
+    control_win.bind('a', lambda event: DirectionSend.left())
+    control_win.bind('d', lambda event: DirectionSend.right())
+    control_win.bind('s', lambda event: DirectionSend.reverse())
 
     try:
         control_win.mainloop()

@@ -6,19 +6,20 @@ class DirectionAverager:
     directions = []
 
     def get_average_dir(self):
-        dir_avg_arr = [self.directions.count(0),self.directions.count(1),self.directions.count(2)]
-        dir_avg_ind = 1
-        for i in range(3):
-            if dir_avg_arr[i] > dir_avg_arr[dir_avg_ind]:
-                dir_avg_ind = i
-        self.directions.clear()
-        dir_avg_arr.clear()
-        if dir_avg_ind == 0:
-            DirectionSend.left()
-        elif dir_avg_ind == 1:
-            DirectionSend.forward()
-        elif dir_avg_ind == 2:
-            DirectionSend.right()
+        if (len(self.directions) > 2):
+            dir_avg_arr = [self.directions.count(0),self.directions.count(1),self.directions.count(2)]
+            dir_avg_ind = 1
+            for i in range(3):
+                if dir_avg_arr[i] > dir_avg_arr[dir_avg_ind]:
+                    dir_avg_ind = i
+            self.directions.clear()
+            dir_avg_arr.clear()
+            if dir_avg_ind == 0:
+                DirectionSend.left()
+            elif dir_avg_ind == 1:
+                DirectionSend.forward()
+            elif dir_avg_ind == 2:
+                DirectionSend.right()
 
 
 dir_avg = DirectionAverager()
@@ -84,15 +85,17 @@ def send_directions(center_x, center_y, frame_w, frame_h, count):
     count += 1
     first_third = frame_w * (1/3)
     second_third = frame_w *(2/3)
-    if center_x >= 0 and center_x < first_third:
+    if center_x > 0 and center_x < first_third:
         dir_avg.directions.append(0)
     elif center_x >= first_third and center_x < second_third:
         dir_avg.directions.append(1)
     elif center_x >= second_third and center_x <= frame_w:
         dir_avg.directions.append(2)
+    elif (center_x == 0 and center_y == 0):
+        count = count
     else:
-        raise ArithmeticError("center_x can't be greater than")
-    if count >= 51:
+        raise ArithmeticError("center_x can't be greater than frame_w")
+    if count >= 15:
         dir_avg.get_average_dir()
         count = 1
         return count

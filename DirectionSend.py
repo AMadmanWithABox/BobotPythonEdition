@@ -16,13 +16,29 @@ def connect():
 
 def forward():
     print("Fowrward")
-    client.exec_command("python3 Directions/Forward.py")
+    try:
+        client.exec_command("python3 Directions/Forward.py")
+    except:
+        client.close()
+        connect()
 def left():
     print("left")
-    client.exec_command("python3 Directions/Left.py")
+    try:
+        client.exec_command("python3 Directions/Left.py")
+    except:
+        client.close()
+        connect()
 def right():
     print("right")
-    client.exec_command("python3 Directions/Right.py")
+    try:
+        client.exec_command("python3 Directions/Right.py")
+    except:
+        client.close()
+        connect()
 def reverse():
     print("reverse")
-    client.exec_command("python3 Directions/Reverse.py")
+    try:
+        client.exec_command("python3 Directions/Reverse.py")
+    except:
+        client.close()
+        connect()
